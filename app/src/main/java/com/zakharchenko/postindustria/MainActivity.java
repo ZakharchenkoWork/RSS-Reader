@@ -1,5 +1,6 @@
 package com.zakharchenko.postindustria;
 
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.resortByDate) {
             //TODO: resort action
             return true;
         }
@@ -83,10 +84,16 @@ public class MainActivity extends AppCompatActivity
                        @Override
                        public void onFinish(List<RssItem> rssResults) {
                            Log.d("ok", ""+rssResults.size());
+                           FragmentTransaction ft = getFragmentManager().beginTransaction();
+
                            for (int i = 0; i < rssResults.size(); i++) {
+                               RssItemFragment itemFragment = new RssItemFragment();
+                               itemFragment.setItemToShow(rssResults.get(i));
+                               ft.add(R.id.content, itemFragment);
                                Log.d("ok " + i, ""+rssResults.get(i).getTitle());
 
                            }
+                           ft.commitAllowingStateLoss();
                        }
                    });
                }

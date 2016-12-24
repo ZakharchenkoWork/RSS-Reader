@@ -46,7 +46,7 @@ public class RssLoader extends AsyncTask<Void, Void, String> {
             try {
                 RssReader rssReader = new RssReader(dataSource);
                 rssResults = rssReader.getItems();
-                rssResults.get(0).getDescription();
+
 
             } catch (Exception e) {
                 e.printStackTrace();

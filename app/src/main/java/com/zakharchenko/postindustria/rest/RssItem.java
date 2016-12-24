@@ -9,7 +9,7 @@ public class RssItem {
     String title;
     String description;
     String link;
-    String imageUrl;
+    String imageUrl = "";
 
     public String getDescription() {
         return description;

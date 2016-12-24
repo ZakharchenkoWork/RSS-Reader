@@ -10,5 +10,6 @@
     <string name="add_rss_feed_message">Please insert url for RSS feed</string>
 
     <string name="your_rss_feeds">Your RSS feeds</string>
+    <string name="read_more">read more...</string>
 
 </resources>

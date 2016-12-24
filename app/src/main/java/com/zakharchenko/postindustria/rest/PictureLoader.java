@@ -56,11 +56,12 @@ public class PictureLoader extends AsyncTask<Void, Void, String> {
                 cashedPictures.put(dataURL,picureFromDB);
                 onBitmapLoadListener.onFinish(picureFromDB);
             } else {
+            */
                 this.dataURL = dataURL;
                 this.onBitmapLoadListener = onBitmapLoadListener;
                 execute();
-            }
-*/
+            //}
+
         }
     }
 
