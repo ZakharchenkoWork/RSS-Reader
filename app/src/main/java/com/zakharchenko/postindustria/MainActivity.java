@@ -1,17 +1,20 @@
 package com.zakharchenko.postindustria;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.zakharchenko.postindustria.rest.RssItem;
+import com.zakharchenko.postindustria.rest.RssLoader;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -22,15 +25,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -68,6 +62,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            //TODO: resort action
             return true;
         }
 
@@ -80,18 +75,22 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.addRss) {
+           new OneButtonDialog(MainActivity.this, getString(R.string.add_rss_feed_message), OneButtonDialog.HAS_EDIT_TEXT_WITH_HINT+getString(R.string.add_rss_feed_message), R.drawable.icon, new OneButtonDialog.OKListener() {
+               @Override
+               public void onOKpressed() {
+                   new RssLoader("http://feeds.reuters.com/Reuters/worldNews", new RssLoader.OnLoadFinishListener() {
+                       @Override
+                       public void onFinish(List<RssItem> rssResults) {
+                           Log.d("ok", ""+rssResults.size());
+                           for (int i = 0; i < rssResults.size(); i++) {
+                               Log.d("ok " + i, ""+rssResults.get(i).getTitle());
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+                           }
+                       }
+                   });
+               }
+           });
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -1,8 +1,14 @@
 <resources>
-    <string name="app_name">Postindustria</string>
+    <string name="app_name">Rss reader</string>
+    <string name="description">Made by Zakharchenko Kostyantyn</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_resort">Resort</string>
+    <string name="add_rss_feed">Add RSS feed</string>
+    <string name="add_rss_feed_message">Please insert url for RSS feed</string>
+
+    <string name="your_rss_feeds">Your RSS feeds</string>
+
 </resources>
