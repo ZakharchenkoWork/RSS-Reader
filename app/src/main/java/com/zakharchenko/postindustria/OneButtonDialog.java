@@ -15,10 +15,10 @@ public class OneButtonDialog extends AlertDialog.Builder{
     public static final String HAS_EDIT_TEXT_WITH_HINT = "EditTextFieldWithHint:";
     private static OneButtonDialog lastDialog;
     public interface OKListener {
-        void onOKpressed();
+        void onOKpressed(String userInput);
     }
 
-
+    EditText input;
     /**
      *
      * @param ctx

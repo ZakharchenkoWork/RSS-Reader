@@ -19,7 +19,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+    NavigationView navigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity
                        public void onFinish(List<RssItem> rssResults) {
                            Log.d("ok", ""+rssResults.size());
                            FragmentTransaction ft = getFragmentManager().beginTransaction();
-
+                           addNewItem("http://feeds.reuters.com/Reuters/worldNews");
                            for (int i = 0; i < rssResults.size(); i++) {
                                RssItemFragment itemFragment = new RssItemFragment();
                                itemFragment.setItemToShow(rssResults.get(i));
@@ -102,6 +102,11 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+    public boolean addNewItem(String itemName){
+        Menu menu = navigationView.getMenu();
+        menu.add(R.id.rssFeedsList,Menu.NONE,Menu.NONE,itemName);
         return true;
     }
 }
