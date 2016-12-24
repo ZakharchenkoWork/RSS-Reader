@@ -51,7 +51,7 @@ public class OneButtonDialog extends AlertDialog.Builder{
                 setView(input);
             } else if(message.contains(HAS_EDIT_TEXT_WITH_HINT)){
                 message = message.replace(HAS_EDIT_TEXT_WITH_HINT, "");
-                final EditText input = new EditText(ctx);
+                 input = new EditText(ctx);
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT);
@@ -74,7 +74,7 @@ public class OneButtonDialog extends AlertDialog.Builder{
             public void onClick(DialogInterface dialog, int which) {
                 lastDialog=null;
 
-                okListener.onOKpressed();
+                okListener.onOKpressed(input.getText().toString());
                 dialog.dismiss();
 
             }

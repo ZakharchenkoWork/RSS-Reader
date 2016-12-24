@@ -16,38 +16,32 @@
 
 package com.zakharchenko.postindustria.rest;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.util.ArrayList;
 
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class RssItem implements Comparable<RssItem>, Parcelable {
+public class RssFeed implements Parcelable {
 
-	private RssFeed feed;
 	private String title;
 	private String link;
-	private String imageLink;
-	private Date pubDate;
 	private String description;
-	private String content;
-
-	public RssItem() {
-		
+	private String language;
+	private ArrayList<RssItem> rssItems;
+	
+	public RssFeed() {
+		rssItems = new ArrayList<RssItem>();
 	}
 	
-	public RssItem(Parcel source) {
+	public RssFeed(Parcel source) {
 		
 		Bundle data = source.readBundle();
 		title = data.getString("title");
 		link = data.getString("link");
-		pubDate = (Date) data.getSerializable("pubDate");
 		description = data.getString("description");
-		content = data.getString("content");
-		feed = data.getParcelable("feed");
+		language = data.getString("language");
+		rssItems = data.getParcelableArrayList("rssItems");
 		
 	}
 
@@ -57,19 +51,18 @@ public class RssItem implements Comparable<RssItem>, Parcelable {
 		Bundle data = new Bundle();
 		data.putString("title", title);
 		data.putString("link", link);
-		data.putSerializable("pubDate", pubDate);
 		data.putString("description", description);
-		data.putString("content", content);
-		data.putParcelable("feed", feed);
+		data.putString("language", language);
+		data.putParcelableArrayList("rssItems", rssItems);
 		dest.writeBundle(data);
 	}
 	
-	public static final Creator<RssItem> CREATOR = new Creator<RssItem>() {
-		public RssItem createFromParcel(Parcel data) {
-			return new RssItem(data);
+	public static final Creator<RssFeed> CREATOR = new Creator<RssFeed>() {
+		public RssFeed createFromParcel(Parcel data) {
+			return new RssFeed(data);
 		}
-		public RssItem[] newArray(int size) {
-			return new RssItem[size];
+		public RssFeed[] newArray(int size) {
+			return new RssFeed[size];
 		}
 	};
 
@@ -78,12 +71,8 @@ public class RssItem implements Comparable<RssItem>, Parcelable {
 		return 0;
 	}
 	
-	public RssFeed getFeed() {
-		return feed;
-	}
-
-	public void setFeed(RssFeed feed) {
-		this.feed = feed;
+	void addRssItem(RssItem rssItem) {
+		rssItems.add(rssItem);
 	}
 
 	public String getTitle() {
@@ -102,23 +91,6 @@ public class RssItem implements Comparable<RssItem>, Parcelable {
 		this.link = link;
 	}
 
-	public Date getPubDate() {
-		return pubDate;
-	}
-
-	public void setPubDate(Date pubDate) {
-		this.pubDate = pubDate;
-	}
-
-	public void setPubDate(String pubDate) {
-		try {
-			SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
-			this.pubDate = dateFormat.parse(pubDate);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-	}
-
 	public String getDescription() {
 		return description;
 	}
@@ -127,21 +99,19 @@ public class RssItem implements Comparable<RssItem>, Parcelable {
 		this.description = description;
 	}
 
-	public String getContent() {
-		return content;
+	public String getLanguage() {
+		return language;
 	}
 
-	public void setContent(String content) {
-		this.content = content;
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 
-	@Override
-	public int compareTo(RssItem another) {
-		if(getPubDate() != null && another.getPubDate() != null) {
-			return getPubDate().compareTo(another.getPubDate());
-		} else { 
-			return 0;
-		}
+	public ArrayList<RssItem> getRssItems() {
+		return rssItems;
 	}
-	
+
+	public void setRssItems(ArrayList<RssItem> rssItems) {
+		this.rssItems = rssItems;
+	} 
 }

@@ -46,13 +46,13 @@ public class RssItemFragment extends Fragment {
         description.setText(itemToShow.getDescription());
 
         final ImageView image = (ImageView) rootView.findViewById(R.id.image);
-        Log.d("ok", itemToShow.getImageUrl());
-        new PictureLoader(itemToShow.getImageUrl(), new PictureLoader.BitmapLoadListener() {
+        //Log.d("ok", itemToShow.getImageUrl());
+        /*new PictureLoader(itemToShow.getImageUrl(), new PictureLoader.BitmapLoadListener() {
             @Override
             public void onFinish(Bitmap picture) {
                 image.setImageBitmap(picture);
             }
-        });
+        });*/
 
         return rootView;
     }
