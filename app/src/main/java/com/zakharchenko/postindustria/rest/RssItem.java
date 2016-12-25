@@ -19,11 +19,14 @@ package com.zakharchenko.postindustria.rest;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RssItem implements Comparable<RssItem>, Parcelable {
 
@@ -100,7 +103,8 @@ public class RssItem implements Comparable<RssItem>, Parcelable {
 		return link;
 	}
 
-	public void setLink(String link) {
+	public void setLink(String link)
+    {
 		this.link = link;
 	}
 
@@ -134,20 +138,32 @@ public class RssItem implements Comparable<RssItem>, Parcelable {
 	}
 
 	public void setDescription(String description) {
-		if ( description.contains("<img src=\"")) {
-			String data = description.split("<img src=\"")[1];
-			String image = "";
-			for (int i = 0; i < data.length(); i++) {
 
-				if (data.charAt(i) == '\"') {
-					break;
-				}
-				image += data.charAt(i);
-			}
+        Log.d("description ", "" + description);
+		Log.d("description parts", "" + description.split("<|>").length);
+        String realDescription = "";
 
-			setImage(image);
-		}
-		this.description = description;
+        String[] parts = description.split("<|>");
+        for (int i = 0; i < parts.length; i++) {
+            Log.d("part", "" + description.split("<|>")[i]);
+            if(parts[i].contains("img src=\"")){
+
+                String data = parts[i].split("img src=\"")[1];
+                for (int j = 0; j < data.length(); j++) {
+                    if (data.charAt(j) == '\"') {
+                     break;
+                    }
+                    image += data.charAt(j);
+                    }
+            }
+            else {
+                if( !parts[i].equals("") && !parts[i].equals("p") && !parts[i].equals("/p") &&  ! parts[i].contains("div class=") && !parts[i].equals("/div") && !parts[i].equals("strong") && !parts[i].equals("/strong") && !parts[i].contains("em class=") && !parts[i].equals("/em") && !parts[i].contains("a href=\""))
+                realDescription += "<"+parts[i]+">";
+            }
+        }
+        setImage(image);
+
+		this.description = realDescription;
 	}
 
 	public String getContent() {
