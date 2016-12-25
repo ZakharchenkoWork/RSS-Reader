@@ -1,35 +1,36 @@
 package com.zakharchenko.postindustria;
 
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.zakharchenko.postindustria.rest.RssFeed;
-import com.zakharchenko.postindustria.rest.RssItem;
 import com.zakharchenko.postindustria.rest.RssLoader;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     NavigationView navigationView;
 
+    int menuItemLastId = 100;
+    PagerAdapter adapter;
+    TabLayout tabLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -39,7 +40,35 @@ public class MainActivity extends AppCompatActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        final HackyViewPager viewPager = (HackyViewPager) findViewById(R.id.pager);
+
+        adapter = new PagerAdapter(getFragmentManager(), null);
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -74,6 +103,8 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    final String TABS_TAG = "TAG";
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -84,17 +115,16 @@ public class MainActivity extends AppCompatActivity
             new OneButtonDialog(MainActivity.this, getString(R.string.add_rss_feed_message), OneButtonDialog.HAS_EDIT_TEXT_WITH_HINT + getString(R.string.add_rss_feed_message), R.drawable.icon, new OneButtonDialog.OKListener() {
                 @Override
                 public void onOKpressed(final String data) {
-                    new RssLoader("http://feeds.reuters.com/Reuters/worldNews", new RssLoader.OnLoadFinishListener() {
+                    new RssLoader("http://www.economist.com/sections/culture/rss.xml", new RssLoader.OnLoadFinishListener() {
                         @Override
-                        public void onFinish(RssFeed feed) {
-
-                            FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        public void onFinish(final RssFeed feed) {
+                           // Bundle bundle = new Bundle();
+                            //bundle.putParcelable("feed", feed);
+                            //FragmentTabHost host = (FragmentTabHost) findViewById(R.id.tabHost);
                             addNewItem(feed.getTitle());
-                            RssHostFragment rssHostFragment = new RssHostFragment();
-                            rssHostFragment.setItemToShow(feed);
-                            ft.replace(R.id.content, rssHostFragment);
-                            ft.commitAllowingStateLoss();
-                            findViewById(R.id.)
+                            adapter.addFeed(feed);
+                            tabLayout.addTab(tabLayout.newTab().setText(feed.getTitle()));
+
                         }
                     });
                 }
@@ -106,7 +136,14 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    int menuItemLastId = 100;
+    TabHost.TabContentFactory tabFactory = new TabHost.TabContentFactory() {
+        @Override
+        public View createTabContent(String tag) {
+            View tab = getLayoutInflater().inflate(R.layout.tab_item_layout, null);
+
+            return tab;
+        }
+    };
 
     public boolean addNewItem(String itemName) {
 
@@ -127,4 +164,6 @@ public class MainActivity extends AppCompatActivity
 
         return true;
     }
+
+
 }

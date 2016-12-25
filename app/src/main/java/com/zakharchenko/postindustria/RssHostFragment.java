@@ -1,25 +1,25 @@
 package com.zakharchenko.postindustria;
 
+
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.zakharchenko.postindustria.rest.RssFeed;
-import com.zakharchenko.postindustria.rest.RssItem;
 
 /**
  * Created by kostya on 24.12.2016.
  */
 
-public class RssHostFragment extends Fragment{
+public class RssHostFragment extends Fragment {
     private View rootView;
     private RssFeed itemsToShow;
 
-    public void setItemToShow(RssFeed itemsToShow) {
+    public void setItemsToShow(RssFeed itemsToShow) {
         this.itemsToShow = itemsToShow;
     }
 
@@ -34,16 +34,17 @@ public class RssHostFragment extends Fragment{
             if (parent != null) {
                 parent.removeView(rootView);
             }
+
         }
+
         if(getActivity() == null || getFragmentManager() == null || itemsToShow == null){
             return null;
         }
-        FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
         for (int i = 0; i < itemsToShow.getRssItems().size(); i++) {
             RssItemFragment itemFragment = new RssItemFragment();
             itemFragment.setItemToShow(itemsToShow.getRssItems().get(i));
             ft.add(R.id.content, itemFragment);
-
         }
         ft.commitAllowingStateLoss();
         return rootView;

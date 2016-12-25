@@ -16,21 +16,21 @@
 
 package com.zakharchenko.postindustria.rest;
 
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 
 public class RssItem implements Comparable<RssItem>, Parcelable {
 
 	private RssFeed feed;
 	private String title;
 	private String link;
-	private String imageLink;
+	private String image="";
 	private Date pubDate;
 	private String description;
 	private String content;
@@ -44,6 +44,7 @@ public class RssItem implements Comparable<RssItem>, Parcelable {
 		Bundle data = source.readBundle();
 		title = data.getString("title");
 		link = data.getString("link");
+		image = data.getString("img");
 		pubDate = (Date) data.getSerializable("pubDate");
 		description = data.getString("description");
 		content = data.getString("content");
@@ -60,6 +61,7 @@ public class RssItem implements Comparable<RssItem>, Parcelable {
 		data.putSerializable("pubDate", pubDate);
 		data.putString("description", description);
 		data.putString("content", content);
+		data.putString("img", image);
 		data.putParcelable("feed", feed);
 		dest.writeBundle(data);
 	}
@@ -119,11 +121,32 @@ public class RssItem implements Comparable<RssItem>, Parcelable {
 		}
 	}
 
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
 	public String getDescription() {
 		return description;
 	}
 
 	public void setDescription(String description) {
+		if ( description.contains("<img src=\"")) {
+			String data = description.split("<img src=\"")[1];
+			String image = "";
+			for (int i = 0; i < data.length(); i++) {
+
+				if (data.charAt(i) == '\"') {
+					break;
+				}
+				image += data.charAt(i);
+			}
+
+			setImage(image);
+		}
 		this.description = description;
 	}
 
